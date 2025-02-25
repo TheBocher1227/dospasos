@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Validation\Rules\Password;
 
 /**
  * UsersController handles user-related operations such as registration,
@@ -30,7 +31,10 @@ class UsersController extends Controller
      {
          // Definir reglas de validación
          $rules = [
-            'password' => 'required|min:8|regex:/[A-Z]/|regex:/\d/|regex:/[@$!%*?&]/',
+            'password' => [
+                'required',
+                Password::min(8)->mixedCase()->numbers()->symbols()
+            ],
             'g-recaptcha-response' => 'required',
              'email' => 'required|email|unique:users,email'
          ];
