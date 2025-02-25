@@ -18,6 +18,7 @@ use Illuminate\Support\Str;
 use App\Mail\CodeEmail;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rules\Password;
 
 /**
  * AuthController handles authentication, user activation, and 2FA processes.
@@ -43,11 +44,22 @@ class AuthController extends Controller
      */
     public function login(Request $request): RedirectResponse
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-            'g-recaptcha-response' => 'required'
-        ]);
+        $rules = [
+            'password' => [
+                'required',
+                Password::min(8)->mixedCase()->numbers()->symbols()
+            ],
+            'g-recaptcha-response' => 'required',
+             'email' => 'required|email'
+         ];
+         // Crear validador
+         $validator = Validator::make($request->all(), $rules);
+     
+         // Si la validación falla, redirigir con errores y datos ingresados
+         if ($validator->fails()) {
+            //dd($validator->errors()->all()); 
+            return redirect()->back()->with('error',$validator->errors());
+         }
 
         $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
             'secret' => config('services.recaptcha.secret_key'),
