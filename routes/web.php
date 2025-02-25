@@ -17,7 +17,7 @@ use App\Http\Controllers\AuthController;
  * @description Displays the login view located in the 'Access' directory.
  */
 Route::get('/login', function () {
-    return view('Access.login');
+    return view('access.login');
 })->name('login');
 
 /** 
@@ -26,7 +26,7 @@ Route::get('/login', function () {
  * @description Displays the register view located in the 'Access' directory.
  */
 Route::get('/register', function () {
-    return view('Access.register');
+    return view('access.register');
 })->name('register');
 
 /**
