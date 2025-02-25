@@ -30,29 +30,17 @@ class UsersController extends Controller
      {
          // Definir reglas de validación
          $rules = [
-             'name' => 'required|max:30',
-             'email' => 'required|email|unique:users,email',
-             'password' => [
-                 'required',
-                 'min:8',
-                 'max:12',
-                 'string',
-                 'regex:/[A-Z]/',  // Debe contener al menos una letra mayúscula
-                 'regex:/[0-9]/',  // Debe contener al menos un número
-                 'regex:/[!@#$%^&*]/' // Debe contener al menos un carácter especial
-             ],
-             'phonenumber' => [
-                 'required',
-                 'regex:/^\+\d{12}$/' // Formato +521234567890
-             ],
-             'g-recaptcha-response' => 'required'
+            'password' => 'required|min:8|regex:/[A-Z]/|regex:/\d/|regex:/[@$!%*?&]/',
+            'g-recaptcha-response' => 'required',
+             'email' => 'required|email|unique:users,email'
          ];
          // Crear validador
          $validator = Validator::make($request->all(), $rules);
      
          // Si la validación falla, redirigir con errores y datos ingresados
          if ($validator->fails()) {
-            return redirect()->route('register')->withErrors($validator)->withInput();
+            //dd($validator->errors()->all()); 
+            return redirect()->back()->with('error',$validator->errors());
          }
      
          // Validar reCAPTCHA
@@ -158,6 +146,6 @@ class UsersController extends Controller
         }
 
         // Return the activation view with the user ID
-        return view('Access.activation', ['userId' => $userId]);
+        return view('access.activation', ['userId' => $userId]);
     }
 }

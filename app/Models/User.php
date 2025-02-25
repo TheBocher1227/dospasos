@@ -28,8 +28,7 @@ class User extends Authenticatable
         'email_verified_at',     
         'codeverified',     
         'two_factor_expires_at',
-        'two_factor_code' ,
-        'phonenumber'
+        'two_factor_code' 
     ];
 
     /**

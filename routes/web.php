@@ -16,6 +16,11 @@ use App\Http\Controllers\AuthController;
  * @name login 
  * @description Displays the login view located in the 'Access' directory.
  */
+
+ Route::get('/', function () {
+    return view('welcome');
+})->name('home')->middleware('checkCookie');
+
 Route::get('/login', function () {
     return view('access.login');
 })->name('login');
@@ -54,7 +59,7 @@ Route::group(['prefix' => 'auth'], function () {
      * @description Displays the 2FA verification view located in the 'Access' directory.
      */
     Route::get('/verifycode', function () {
-        return view('Access.twofactorcode');
+        return view('access.twofactorcode');
     })->name('2fa.view');
 
     /** 

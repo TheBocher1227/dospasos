@@ -43,7 +43,7 @@ return [
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
 
-        'mysql' => [
+       'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '10.124.0.4'),
@@ -61,8 +61,8 @@ return [
             'options' => [
     PDO::MYSQL_ATTR_SSL_CA => env('DB_SSL_CA'),
     PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => env('DB_SSL_VERIFY'),
-        ],
-        ],
+     ],
+],
 
         'pgsql' => [
             'driver' => 'pgsql',

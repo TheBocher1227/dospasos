@@ -7,6 +7,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Session\TokenMismatchException;
 use Throwable;
+use Log;
 
 class Handler extends ExceptionHandler
 {
@@ -58,13 +59,14 @@ class Handler extends ExceptionHandler
     {
         //Handle validation errors
         if ($exception instanceof ValidationException) {
+            Log::info($exception);
             return redirect()->back()->withErrors($exception->errors())->withInput();
         }
 
         // Handle database connection errors
         if ($exception instanceof QueryException) {
-            return redirect()->back()->with('error', 'DATA_001-Your request cannot be made at this time. Please try again later.');
-        }
+           return redirect()->back()->with('error', 'DATA_001-Your request cannot be made at this time. Please try again later.');
+       }
 
          // Handle 404 errors
          if ($exception instanceof NotFoundHttpException) {
