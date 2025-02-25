@@ -45,7 +45,7 @@ class AuthController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required|max:10',
+            'password' => 'required',
             'g-recaptcha-response' => 'required'
         ]);
 
