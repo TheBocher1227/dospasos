@@ -138,6 +138,10 @@
     @enderror
 
     <button type="submit" class="btn" id="submitBtn" disabled>Registrarse</button>
+
+    <form action="{{ route('login') }}" method="GET">
+            <button type="submit" class="btn register-btn">Ir al Login</button>
+        </form>
 </form>
 
     </div>

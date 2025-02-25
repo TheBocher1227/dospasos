@@ -148,8 +148,8 @@
 
         <form action="{{ route('auth.loginuser') }}" method="POST" id="loginForm">
             @csrf
-            <input type="email" class="input-field" name="email" placeholder="Email" value="{{ old('email') }}" required>
-            <input type="password" class="input-field" name="password" placeholder="Contraseña" required maxlength="10">
+            <input type="email" class="input-field" name="email" placeholder="Email" value="{{ old('email') }}" required autocomplete="off">
+            <input type="password" class="input-field" name="password" placeholder="Contraseña" required autocomplete="off">
             
             <!-- reCAPTCHA -->
             <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
