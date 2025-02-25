@@ -60,7 +60,7 @@ return [
             'engine' => null,
             'options' => [
     PDO::MYSQL_ATTR_SSL_CA => env('DB_SSL_CA'),
-    PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => env('DB_SSL_VERIFY', false),
+    PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => env('DB_SSL_VERIFY'),
         ],
         ],
 
