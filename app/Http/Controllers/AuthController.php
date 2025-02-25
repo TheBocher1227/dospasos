@@ -82,7 +82,8 @@ class AuthController extends Controller
         // Generate and send 2FA code
         $this->generateAndSend2FACode($user);
 
-        return redirect()->route('2fa.view')->with('success', 'A code has been sent to your email.');
+        return redirect('/auth/verifycode')->with('success', 'A code has been sent to your email.');
+
     }
 
     /**
