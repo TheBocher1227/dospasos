@@ -6,6 +6,8 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Session\TokenMismatchException;
+use Illuminate\Http\Exceptions\ThrottleRequestsException;
+use Illuminate\Http\Exceptions\NotFoundHttpException;
 use Throwable;
 use Log;
 
@@ -57,28 +59,40 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        //Handle validation errors
+        // Manejo de errores de validación
         if ($exception instanceof ValidationException) {
             Log::info($exception);
             return redirect()->back()->withErrors($exception->errors())->withInput();
         }
 
-        // Handle database connection errors
+        // Manejo de errores de conexión a la base de datos
         if ($exception instanceof QueryException) {
-           return redirect()->back()->with('error', 'DATA_001-Your request cannot be made at this time. Please try again later.');
-       }
+            return redirect()->back()->with('error', 'DATA_001-Your request cannot be made at this time. Please try again later.');
+        }
 
-         // Handle 404 errors
-         if ($exception instanceof NotFoundHttpException) {
+        // Manejo de error 404 (Página no encontrada)
+        if ($exception instanceof NotFoundHttpException) {
+            $requestedUrl = $request->path(); // Obtener la URL solicitada
+
+            // Si la URL contiene mayúsculas, redirigir al login con el mensaje de error
+            if ($requestedUrl !== strtolower($requestedUrl)) {
+                return redirect()->route('login')->with('error', 'No se puede realizar la petición en este momento.');
+            }
+
             return response()->view('errors.error404', [], 404);
         }
 
-        // Handle 419 Token Mismatch (CSRF Token Expired)
+        // Manejo de error 419 (Token CSRF Expirado)
         if ($exception instanceof TokenMismatchException) {
             return redirect()->route('login')->with('error', 'AUTH_001-Tu sesión ha expirado. Por favor, inicia sesión nuevamente.');
         }
-         // Default behavior: pass the exception to Laravel's default handler
+
+        // Manejo de demasiadas peticiones (429 Too Many Requests)
+        if ($exception instanceof ThrottleRequestsException) {
+            return redirect()->route('login')->with('error', 'Demasiadas peticiones realizadas. Por favor, inténtalo más tarde.');
+        }
+
+        // Comportamiento por defecto: pasar la excepción al manejador de Laravel
         return parent::render($request, $exception);
     }
-
 }

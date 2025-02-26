@@ -91,16 +91,16 @@
     <div class="register-container">
         <h2>Registro</h2>
 
-        {{-- Depuración: Mostrar errores en la vista --}}
         @if($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         @if (session('success'))
             <div class="success-message">
                 <p>{{ session('success') }}</p>
@@ -112,38 +112,32 @@
                 <p>{{ session('error') }}</p>
             </div>
         @endif
+
         <form action="{{ route('auth.registeruser') }}" method="POST" id="registerForm">
-    @csrf
+            @csrf
 
-    {{-- Campo: Nombre --}}
-    <input type="text" class="input-field" name="name" placeholder="Nombre" value="{{ old('name') }}" required>
-   
+            <input type="text" class="input-field" name="name" placeholder="Nombre" value="{{ old('name') }}" required>
+            <input type="email" class="input-field" name="email" placeholder="Correo Electrónico" value="{{ old('email') }}" required>
 
-    {{-- Campo: Email --}}
-    <input type="email" class="input-field" name="email" placeholder="Correo Electrónico" value="{{ old('email') }}" required>
-   
+            <input type="password" class="input-field" name="password" id="password" placeholder="Contraseña" required>
+            <div id="password-tooltip" class="password-tooltip">
+                <p id="length" class="invalid">❌ Al menos 8 caracteres</p>
+                <p id="uppercase" class="invalid">❌ Una letra mayúscula</p>
+                <p id="number" class="invalid">❌ Un número</p>
+                <p id="special" class="invalid">❌ Un carácter especial (!@#$%^&*)</p>
+            </div>
 
-    {{-- Campo: Contraseña --}}
-    <input type="password" class="input-field" name="password" id="password" placeholder="Contraseña" required>
-    <div id="password-tooltip" class="password-tooltip">
-        <p id="length" class="invalid">❌ Al menos 8 caracteres</p>
-        <p id="uppercase" class="invalid">❌ Una letra mayúscula</p>
-        <p id="number" class="invalid">❌ Un número</p>
-        <p id="special" class="invalid">❌ Un carácter especial (!@#$%^&*)</p>
-    </div>
-    {{-- reCAPTCHA --}}
-    <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
-    @error('g-recaptcha-response')
-        <div class="error">{{ $message }}</div>
-    @enderror
+            <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+            @error('g-recaptcha-response')
+                <div class="error">{{ $message }}</div>
+            @enderror
 
-    <button type="submit" class="btn" id="submitBtn" disabled>Registrarse</button>
+            <button type="submit" class="btn" id="submitBtn" disabled>Registrarse</button>
+        </form>
 
-    <form action="{{ route('login') }}" method="GET">
+        <form action="{{ route('login') }}" method="GET">
             <button type="submit" class="btn register-btn">Ir al Login</button>
         </form>
-</form>
-
     </div>
 
     <script>
@@ -178,7 +172,8 @@
                 updateRequirement(requirements.number, numberValid);
                 updateRequirement(requirements.special, specialValid);
 
-                submitButton.disabled = !(lengthValid && uppercaseValid && numberValid && specialValid);
+                // Solo deshabilitamos el botón de registro, no el de login
+                document.getElementById("submitBtn").disabled = !(lengthValid && uppercaseValid && numberValid && specialValid);
             });
 
             function updateRequirement(element, isValid) {
